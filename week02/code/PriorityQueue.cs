@@ -1,63 +1,76 @@
-﻿public class PriorityQueue
-{
-    private List<PriorityItem> _queue = new();
+﻿using System;
+using System.Collections.Generic;
 
+namespace Week02Queues
+{
     /// <summary>
-    /// Add a new value to the queue with an associated priority.  The
-    /// node is always added to the back of the queue regardless of 
-    /// the priority.
+    /// A priority queue where higher numbers have higher priority.
+    /// FIFO is maintained if multiple items have the same highest priority.
     /// </summary>
-    /// <param name="value">The value</param>
-    /// <param name="priority">The priority</param>
-    public void Enqueue(string value, int priority)
+    public class PriorityQueue
     {
-        var newNode = new PriorityItem(value, priority);
-        _queue.Add(newNode);
-    }
+        private readonly List<PriorityItem> _queue = new List<PriorityItem>();
 
-    public string Dequeue()
-    {
-        if (_queue.Count == 0) // Verify the queue is not empty
+        /// <summary>
+        /// Add a new value to the queue with an associated priority. Always added to the back.
+        /// </summary>
+        public void Enqueue(string value, int priority)
         {
-            throw new InvalidOperationException("The queue is empty.");
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            _queue.Add(new PriorityItem(value, priority));
         }
 
-        // Find the index of the item with the highest priority to remove
-        var highPriorityIndex = 0;
-        for (int index = 1; index < _queue.Count - 1; index++)
+        /// <summary>
+        /// Remove and return the item with the highest priority. FIFO if tie.
+        /// Throws InvalidOperationException if queue is empty.
+        /// </summary>
+        public string Dequeue()
         {
-            if (_queue[index].Priority >= _queue[highPriorityIndex].Priority)
-                highPriorityIndex = index;
+            if (_queue.Count == 0)
+                throw new InvalidOperationException("The queue is empty.");
+
+            int highPriorityIndex = 0;
+            int highestPriority = _queue[0].Priority;
+
+            // Find first item with highest priority (FIFO for ties)
+            for (int i = 1; i < _queue.Count; i++)
+            {
+                if (_queue[i].Priority > highestPriority)
+                {
+                    highestPriority = _queue[i].Priority;
+                    highPriorityIndex = i;
+                }
+            }
+
+            string value = _queue[highPriorityIndex].Value;
+            _queue.RemoveAt(highPriorityIndex); // remove dequeued item
+            return value;
         }
 
-        // Remove and return the item with the highest priority
-        var value = _queue[highPriorityIndex].Value;
-        return value;
+        // DO NOT MODIFY
+        public override string ToString()
+        {
+            return $"[{string.Join(", ", _queue)}]";
+        }
     }
 
-    // DO NOT MODIFY THE CODE IN THIS METHOD
-    // The graders rely on this method to check if you fixed all the bugs, so changes to it will cause you to lose points.
-    public override string ToString()
+    internal class PriorityItem
     {
-        return $"[{string.Join(", ", _queue)}]";
-    }
-}
+        internal string Value { get; set; }
+        internal int Priority { get; set; }
 
-internal class PriorityItem
-{
-    internal string Value { get; set; }
-    internal int Priority { get; set; }
+        internal PriorityItem(string value, int priority)
+        {
+            Value = value;
+            Priority = priority;
+        }
 
-    internal PriorityItem(string value, int priority)
-    {
-        Value = value;
-        Priority = priority;
-    }
-
-    // DO NOT MODIFY THE CODE IN THIS METHOD
-    // The graders rely on this method to check if you fixed all the bugs, so changes to it will cause you to lose points.
-    public override string ToString()
-    {
-        return $"{Value} (Pri:{Priority})";
+        // DO NOT MODIFY
+        public override string ToString()
+        {
+            return $"{Value} (Pri:{Priority})";
+        }
     }
 }

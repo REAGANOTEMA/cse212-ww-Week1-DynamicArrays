@@ -1,35 +1,48 @@
-/// <summary>
-/// A basic implementation of a Queue
-/// </summary>
-public class PersonQueue
+using System;
+using System.Collections.Generic;
+
+namespace Week02Queues
 {
-    private readonly List<Person> _queue = new();
-
-    public int Length => _queue.Count;
-
     /// <summary>
-    /// Add a person to the queue
+    /// A basic FIFO queue for Person objects
     /// </summary>
-    /// <param name="person">The person to add</param>
-    public void Enqueue(Person person)
+    public class PersonQueue
     {
-        _queue.Insert(0, person);
-    }
+        private readonly List<Person> _queue = new List<Person>();
 
-    public Person Dequeue()
-    {
-        var person = _queue[0];
-        _queue.RemoveAt(0);
-        return person;
-    }
+        public int Length => _queue.Count;
 
-    public bool IsEmpty()
-    {
-        return Length == 0;
-    }
+        /// <summary>
+        /// Add a person to the back of the queue
+        /// </summary>
+        /// <param name="person">The person to add</param>
+        public void Enqueue(Person person)
+        {
+            if (person == null) throw new ArgumentNullException(nameof(person));
+            _queue.Add(person); // add to the end for FIFO
+        }
 
-    public override string ToString()
-    {
-        return $"[{string.Join(", ", _queue)}]";
+        /// <summary>
+        /// Remove and return the person at the front of the queue
+        /// </summary>
+        public Person Dequeue()
+        {
+            if (_queue.Count == 0)
+                throw new InvalidOperationException("The queue is empty.");
+
+            Person person = _queue[0];
+            _queue.RemoveAt(0); // remove from the front
+            return person;
+        }
+
+        public bool IsEmpty()
+        {
+            return _queue.Count == 0;
+        }
+
+        public override string ToString()
+        {
+            return $"[{string.Join(", ", _queue)}]";
+        }
     }
 }
