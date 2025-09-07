@@ -1,28 +1,23 @@
-using System;
+// Author: Reagan Otema
+// Date: 2025-09-07
+// Description: Person class used for TakingTurnsQueue.
 
 namespace Week02Queues
 {
-    /// <summary>
-    /// Represents a person in the TakingTurnsQueue.
-    /// Turns <= 0 means infinite turns.
-    /// </summary>
     public class Person
     {
-        public readonly string Name;
-        public int Turns { get; set; }
+        public string Name { get; }
+        public int Turns { get; set; }  // -1 = infinite turns
 
-        public Person(string name, int turns)
+        public Person(string name, int turns = -1)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-
             Name = name;
             Turns = turns;
         }
 
         public override string ToString()
         {
-            return Turns <= 0 ? $"({Name}:Forever)" : $"({Name}:{Turns})";
+            return Name;
         }
     }
 }
