@@ -1,7 +1,6 @@
 // Author: Reagan Otema
 // Date: 2025-09-07
-// Description: TakingTurnsQueue where people take turns until they run out of turns,
-// or infinitely if Turns = -1.
+// Description: Implements a circular queue where people take turns
 
 using System;
 using System.Collections.Generic;
@@ -10,34 +9,34 @@ namespace Week02Queues
 {
     public class TakingTurnsQueue
     {
-        private readonly Queue<Person> _people = new Queue<Person>();
+        private readonly Queue<Person> _queue = new Queue<Person>();
 
         public void AddPerson(Person person)
         {
-            _people.Enqueue(person);
+            if (person == null)
+                throw new ArgumentNullException(nameof(person));
+
+            _queue.Enqueue(person);
         }
 
         public Person GetNextPerson()
         {
-            if (_people.Count == 0)
-            {
-                // FIX: Changed exception message to match expected test result
+            if (_queue.Count == 0)
                 throw new InvalidOperationException("No one in the queue.");
-            }
 
-            var current = _people.Dequeue();
+            var person = _queue.Dequeue();
 
-            if (current.Turns > 1)
+            if (person.Turns > 1)
             {
-                current.Turns--;
-                _people.Enqueue(current);
+                person.Turns--;
+                _queue.Enqueue(person);
             }
-            else if (current.Turns == -1)
+            else if (person.Turns <= 0) // infinite turns
             {
-                _people.Enqueue(current);
+                _queue.Enqueue(person);
             }
 
-            return current;
+            return person;
         }
     }
 }

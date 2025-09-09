@@ -1,15 +1,15 @@
 // Author: Reagan Otema
 // Date: 2025-09-07
-// Description: Person class used for TakingTurnsQueue.
+// Description: Person class used in TakingTurnsQueue
 
 namespace Week02Queues
 {
     public class Person
     {
         public string Name { get; }
-        public int Turns { get; set; }  // -1 = infinite turns
+        public int Turns { get; set; }  // 0 or less = infinite
 
-        public Person(string name, int turns = -1)
+        public Person(string name, int turns = 0)
         {
             Name = name;
             Turns = turns;
